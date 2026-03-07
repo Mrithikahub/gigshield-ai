@@ -1,9 +1,3 @@
-"""
-Pydantic Schemas
-=================
-All request bodies and response shapes are defined here.
-Frontend / Member 5 can use these as the contract.
-"""
 
 from pydantic import BaseModel, Field, field_validator
 from typing   import Optional, Literal
