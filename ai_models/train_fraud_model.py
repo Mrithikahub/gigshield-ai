@@ -1,36 +1,25 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
 import joblib
+from sklearn.ensemble import RandomForestClassifier
 
-# load dataset
-data = pd.read_csv("fraud_dataset.csv")
+data = {
+    "claim_amount":[200,5000,300,1000,150,7000],
+    "risk_score":[0.7,0.0,0.6,0.2,0.5,0.1],
+    "disruption_count":[1,0,1,0,1,0],
+    "past_claims":[2,7,1,3,0,10],
+    "avg_claim":[400,300,350,500,200,250],
+    "days_since":[30,3,60,10,100,2],
+    "fraud":[0,1,0,0,0,1]
+}
 
-X = data[['location_mismatch','claim_frequency','weather_match','time_anomaly','gps_speed']]
-y = data['fraud']
+df = pd.DataFrame(data)
 
-# split
-X_train,X_test,y_train,y_test = train_test_split(
-    X,
-    y,
-    test_size=0.2,
-    random_state=42
-)
+X = df.drop("fraud",axis=1)
+y = df["fraud"]
 
-# model
-model = RandomForestClassifier(n_estimators=150)
+model = RandomForestClassifier()
+model.fit(X,y)
 
-# train
-model.fit(X_train,y_train)
-
-# predictions
-predictions = model.predict(X_test)
-
-print("Fraud Model Evaluation")
-print(classification_report(y_test,predictions))
-
-# save model
 joblib.dump(model,"fraud_model.pkl")
 
-print("Fraud detection model trained and saved")
+print("Fraud model trained")

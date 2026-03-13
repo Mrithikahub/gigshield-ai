@@ -1,49 +1,27 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
 import joblib
-import matplotlib.pyplot as plt
+from sklearn.ensemble import RandomForestClassifier
 
-# load dataset
-data = pd.read_csv("dataset.csv")
+data = {
+    "temperature":[30,45,25,42,28,35,40],
+    "rainfall":[0,80,0,60,10,0,70],
+    "wind":[3,10,2,8,4,5,9],
+    "humidity":[60,90,50,80,70,65,85],
+    "aqi":[80,150,60,200,90,120,180],
+    "disruption_count":[0,1,0,1,0,0,1],
+    "risk_score":[0.0,0.7,0.0,0.6,0.1,0.2,0.8],
+    "is_disrupted":[0,1,0,1,0,0,1],
+    "risk_level":[0,3,0,2,0,1,3]
+}
 
-# features
-X = data[['temperature','rainfall','aqi','wind_speed','traffic_index','flood_risk']]
-y = data['risk']
+df = pd.DataFrame(data)
 
-# train test split
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
-    test_size=0.2,
-    random_state=42
-)
+X = df.drop("risk_level",axis=1)
+y = df["risk_level"]
 
-# model
-model = RandomForestClassifier(n_estimators=200)
+model = RandomForestClassifier()
+model.fit(X,y)
 
-# train
-model.fit(X_train,y_train)
-
-# predictions
-predictions = model.predict(X_test)
-
-# accuracy
-accuracy = accuracy_score(y_test,predictions)
-print("Model Accuracy:", accuracy)
-
-# save model
 joblib.dump(model,"risk_model.pkl")
 
-print("Risk model trained and saved")
-
-# feature importance
-importance = model.feature_importances_
-features = X.columns
-
-plt.bar(features, importance)
-plt.title("Feature Importance for Risk Prediction")
-plt.xlabel("Features")
-plt.ylabel("Importance")
-plt.show()
+print("Risk model trained")
