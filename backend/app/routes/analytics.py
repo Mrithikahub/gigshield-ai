@@ -1,19 +1,10 @@
-"""
-Analytics Routes  📊
-=====================
-GET /api/analytics/admin/summary         → full insurer dashboard
-GET /api/analytics/worker/{id}/dashboard → worker's personal dashboard
-"""
-
 from fastapi import APIRouter, HTTPException
 from app.utils.database import (
     get_worker, get_all_workers, get_all_policies,
     get_all_claims, get_worker_claims, get_active_policy,
     get_worker_policies,
 )
-
 router = APIRouter()
-
 
 @router.get("/admin/summary", summary="Admin dashboard — loss ratio, fraud, payouts")
 def admin_dashboard():
