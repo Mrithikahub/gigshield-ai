@@ -8,18 +8,22 @@ GET  /api/claims/                   → all claims (admin)
 PATCH /api/claims/{id}/approve      → admin approves pending claim
 PATCH /api/claims/{id}/reject       → admin rejects claim
 """
+from fastapi import APIRouter, HTTPException, status
 
-from fastapi  import APIRouter, HTTPException, status
+from app.models.schemas import ClaimSubmit
 
-from app.models.schemas          import ClaimSubmit
 from app.services.fraud_detector import detect
 from app.services.trigger_engine import calculate_payout
 from app.services.payout_service import process_payout
-from app.utils.database          import (
-    create_claim, get_claim, get_worker, get_all_claims,
-    get_worker_claims, get_active_policy,
-)
 
+from app.utils.database import (
+    create_claim,
+    get_claim,
+    get_worker,
+    get_all_claims,
+    get_worker_claims,
+    get_active_policy,
+)
 router = APIRouter()
 
 
