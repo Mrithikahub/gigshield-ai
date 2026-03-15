@@ -1,214 +1,59 @@
-GigShield AI – Backend
+🛡️ GigShield AI — Backend
+Parametric income insurance for Zomato & Swiggy delivery partners.
+Zero manual claims. Instant UPI payouts. Fully automated.
+View API Docs
+</div>
 
-This repository contains the backend for GigShield AI, a parametric insurance system designed for food delivery workers on platforms like Zomato and Swiggy.
+📖 Overview
+GigShield AI backend is built with FastAPI and handles the entire insurance logic — worker registration, premium calculation, policy management, parametric triggers, fraud detection, and instant payouts.
+When a disruption crosses its threshold, the system automatically creates claims for all covered workers and fires UPI payouts with zero manual steps.
+Disruption Detected  →  Threshold Check  →  Claims Auto-Created  →  Instant UPI Payout
 
-The backend is built using FastAPI and handles worker registration, policy creation, premium calculation, claim processing, and disruption triggers such as heavy rain or extreme heat. When certain environmental conditions are met, the system automatically generates claims and payouts.
-
-The goal of the project is to simulate a system where gig workers can receive instant insurance payouts when their ability to work is affected by external disruptions.
-
-Running the Backend
-
-First install the required dependencies.
-
+🚀 Quickstart
+bash# 1. Install dependencies
 pip install -r requirements.txt
 
-Then start the server.
-
+# 2. Start the server
 python -m uvicorn app.main:app --reload
 
-Once the server is running, you can access the API documentation here:
-
+# 3. Open interactive API docs
 http://localhost:8000/docs
 
-FastAPI automatically provides an interactive interface where all endpoints can be tested.
-
-Models
-
-The models define request and response structures using Pydantic.
-
-Utils
-
-Utility files such as the temporary in-memory database.
-
-Main API Areas
-
-The backend exposes several groups of endpoints.
-
-Workers
-
-Handles delivery partner registration and profile information.
-
-Example functionality:
-
-register a worker
-
-retrieve worker details
-
-estimate potential income loss during disruptions
-
-show disruption forecasts
-
-Premium
-
-Responsible for calculating insurance premiums.
-
-Premiums depend on factors such as:
-
-city risk level
-
-worker earnings
-
-risk score
-
-Policies
-
-Workers can purchase weekly policies which make them eligible for payouts during disruptions.
-
-Endpoints include:
-
-create a policy
-
-view active policies
-
-check policy history
-
-Triggers
-
-Triggers represent real-world disruptions such as weather events.
-
-Examples:
-
-heavy rain
-
-extreme heat
-
-high AQI
-
-flood alerts
-
-curfew
-
-When a trigger fires, the system automatically generates payouts for eligible workers.
-
-Claims
-
-Workers can submit claims manually if needed. Each claim passes through a fraud detection system before approval.
-
-Analytics
-
-Analytics endpoints provide dashboards and summaries such as:
-
-total claims
-
-payout amounts
-
-fraud statistics
-
-city-level disruption patterns
-
-Trigger Conditions
-
-Some examples of disruption conditions used in the system:
-
-Trigger	Condition
-Heavy Rain	Rainfall ≥ 50 mm
-Extreme Heat	Temperature ≥ 42°C
-High AQI	AQI ≥ 400
-Flood Alert	Government alert issued
-Curfew	Movement restrictions
-
-When these thresholds are crossed, the system calculates payouts automatically.
-
-Premium Calculation
-
-The weekly premium is calculated using a base amount plus additional adjustments depending on worker risk.
-
-Example structure:
-
-weekly_premium = base_price + zone_surcharge + risk_loading
-
-Coverage per disruption event is capped to ensure sustainability of the system.
-
-AI Components
-
-The project includes simple rule-based AI modules.
-
-Risk Engine
-
-Calculates a risk score between 0 and 1 for each worker based on:
-
-city
-
-work zone
-
-average daily earnings
-
-platform
-
-This score affects the insurance premium.
-
-Fraud Detection
-
-Manual claims are evaluated using several rules such as:
-
-duplicate claims on the same day
-
-unusually high claim frequency
-
-late submissions
-
-missing GPS data
-
-claims from outside the registered city
-
-Based on the final fraud score, the claim may be:
-
-automatically approved
-
-sent for manual review
-
-rejected
-
-Future Improvements
-
-Planned improvements include:
-
-replacing rule-based logic with machine learning models
-
-integrating live weather and AQI APIs
-
-adding Razorpay payouts
-
-migrating the database to PostgreSQL
-
-Tech Stack
-
-The backend uses:
-
-Python
-
-FastAPI
-
-Uvicorn
-
-Pydantic
-
-These tools were chosen for their simplicity and performance when building REST APIs.
-
-Testing the System
-
-Once the backend is running, open the API documentation page:
-
-http://localhost:8000/docs
-
-From there you can test the full flow:
-
-Register a worker
-
-Generate a premium quote
-
-Create a policy
-
-Trigger a disruption event
-
-Observe the generated claims and payouts
+ API Reference
+ Workers
+MethodEndpointDescriptionPOST/api/workers/registerRegister a delivery partnerGET/api/workers/{worker_id}Get worker profileGET/api/workers/{worker_id}/income-estimateShow ₹ loss per disruption typeGET/api/workers/{worker_id}/forecastWeekly disruption forecast
+ Premium
+MethodEndpointDescriptionPOST/api/premium/quotePreview premium before registeringGET/api/premium/calculate?worker_id=XPremium for a registered workerGET/api/premium/thresholdsAll trigger definitions
+ Policies
+MethodEndpointDescriptionPOST/api/policies/createPurchase weekly coverageGET/api/policies/active/{worker_id}Check if worker is currently coveredGET/api/policies/worker/{worker_id}Full policy history
+ Triggers
+MethodEndpointDescriptionPOST/api/triggers/fireFire disruption → auto-creates claims + payoutsPOST/api/triggers/simulateDemo simulationGET/api/triggers/thresholdsAll trigger definitionsGET/api/triggers/forecast/{city}Weekly risk forecast for a city
+ Claims
+MethodEndpointDescriptionPOST/api/claims/submitManual claim with fraud detectionGET/api/claims/worker/{worker_id}Worker claim historyGET/api/claims/{claim_id}Single claim detailPATCH/api/claims/{claim_id}/approveAdmin: approve + fire payoutPATCH/api/claims/{claim_id}/rejectAdmin: reject claim
+ Analytics
+MethodEndpointDescriptionGET/api/analytics/admin/summaryLoss ratio, fraud rate, payout trendsGET/api/analytics/worker/{worker_id}/dashboardWorker earnings and coverage status
+
+ Trigger Thresholds
+TriggerConditionPayoutHours LostHEAVY_RAINRainfall ≥ 50 mm1.00× coverage4 hrsEXTREME_HEATTemperature ≥ 42 °C0.75× coverage3 hrsHIGH_AQIAQI index ≥ 4000.75× coverage3 hrsFLOOD_ALERTAlert active1.25× coverage8 hrsCURFEWMovement restricted1.00× coverage8 hrs
+
+ Premium Formula
+weekly_premium = ₹30 base
+               + zone_surcharge   →  ₹0 / ₹10 / ₹20  (low / medium / high city)
+               + risk_loading     →  risk_score × ₹15
+
+coverage_per_event = min(avg_daily_earning × 80%, ₹400)
+City Risk Zones
+🔴 High🟡 Medium🟢 LowMumbai, Delhi, Chennai, KolkataBangalore, Hyderabad, Pune, AhmedabadAll other cities
+
+🤖 AI Services
+Risk Engine — services/risk_engine.py
+Calculates a risk score 0.0 – 1.0 per worker based on city, work zone, daily earnings, and platform. This score directly affects the weekly premium.
+Fraud Detector — services/fraud_detector.py
+Every manual claim is scored against 6 rules:
+RuleFlagScoreSame claim filed twice todayDUPLICATE_CLAIM_SAME_DAY+0.504+ claims in 7 daysHIGH_VELOCITY+0.25Submitted 24+ hrs after eventLATE_SUBMISSION+0.20No GPS providedNO_GPS_PROVIDED+0.10GPS outside registered cityGPS_OUTSIDE_CITY_BOUNDS+0.403+ trigger types this weekMULTI_TRIGGER_STACKING+0.20
+score ≥ 0.60  →  rejected
+score ≥ 0.30  →  pending review
+score  < 0.30  →  approved + instant payout
+
+🛠️ Tech Stack
+TechnologyPurposeFastAPIREST API frameworkUvicornASGI serverPydantic v2Request validationPython 3.10+Core language
