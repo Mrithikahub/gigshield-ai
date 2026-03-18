@@ -88,6 +88,8 @@ Premium is calculated based on:
 ---
 
 ## Architecture Diagram
+<img width="1600" height="854" alt="image" src="https://github.com/user-attachments/assets/c95062f1-7afd-42b8-9398-8d162c040dc0" />
+
 
 C:\Users\mrith\gigshield-ai\docs\architecture.jpeg
 
