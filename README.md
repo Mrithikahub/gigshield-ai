@@ -90,10 +90,10 @@ Premium is calculated based on:
 ## Architecture Diagram
 <img width="1600" height="854" alt="image" src="https://github.com/user-attachments/assets/c95062f1-7afd-42b8-9398-8d162c040dc0" />
 
-
-C:\Users\mrith\gigshield-ai\docs\architecture.jpeg
+![Architecture](docs/architecture.jpeg)
 
 ## Workflow Diagram
+<img width="307" height="1600" alt="image" src="https://github.com/user-attachments/assets/c3745320-f15d-4667-91d9-e58b15e66c95" />
 
 ![Workflow](docs/workflow.jpeg)
 
