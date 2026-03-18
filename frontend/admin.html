@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GigShield AI – Admin Dashboard</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f4f7fc;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #0b2a4f 0%, #1b4a7a 100%);
+            color: white;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .sidebar .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+            letter-spacing: -0.5px;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+            to { text-shadow: 0 0 20px rgba(255,255,255,0.7); }
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .sidebar nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.2rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar nav ul li a i {
+            width: 24px;
+            font-size: 1.2rem;
+        }
+
+        .sidebar nav ul li a:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .sidebar nav ul li.active a {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .logout {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 1.5rem;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* ===== TOP NAVBAR ===== */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-left h2 {
+            font-size: 1.5rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .nav-left p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #f8fafc;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+        }
+
+        .admin-info i {
+            color: #3b82f6;
+            font-size: 1.2rem;
+        }
+
+        .admin-info span {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .notifications {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notifications i {
+            font-size: 1.4rem;
+            color: #64748b;
+            transition: color 0.3s;
+        }
+
+        .notifications:hover i {
+            color: #3b82f6;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 1rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* ===== STATS CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1.8rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease backwards;
+            border: 1px solid rgba(0,0,0,0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .stat-info h3 {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: #3b82f6;
+            opacity: 0.8;
+        }
+
+        /* ===== CHARTS SECTION ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 2rem;
+            padding: 1.8rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            animation: fadeInUp 0.6s ease backwards;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-header i {
+            font-size: 1.5rem;
+            color: #3b82f6;
+            background: #eef2ff;
+            padding: 0.8rem;
+            border-radius: 1rem;
+        }
+
+        .chart-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        /* Claims per city - bar chart simulation */
+        .city-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .bar-label {
+            width: 80px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .bar-container {
+            flex: 1;
+            height: 24px;
+            background: #e2e8f0;
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            border-radius: 1.5rem;
+            width: 0%;
+            animation: barGrow 1.5s ease-out forwards;
+        }
+
+        @keyframes barGrow {
+            from { width: 0%; }
+            to { width: var(--target-width); }
+        }
+
+        .bar-value {
+            min-width: 40px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        /* Disruptions over time - line chart simulation */
+        .line-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 150px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .line-point {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .point-dot {
+            width: 12px;
+            height: 12px;
+            background: #3b82f6;
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+            animation: pulseDot 1.5s infinite;
+        }
+
+        @keyframes pulseDot {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59,130,246,0.7); }
+            70% { transform: scale(1.3); box-shadow: 0 0 0 10px rgba(59,130,246,0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59,130,246,0); }
+        }
+
+        .point-line {
+            width: 2px;
+            height: 60px;
+            background: #3b82f6;
+            transform-origin: bottom;
+            animation: growLine 1s ease-out;
+        }
+
+        @keyframes growLine {
+            from { height: 0; }
+            to { height: var(--line-height); }
+        }
+
+        .point-label {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        /* Risk distribution - donut chart */
+        .donut-container {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .donut {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ef4444 0% 15%,
+                #f97316 15% 35%,
+                #facc15 35% 60%,
+                #4ade80 60% 85%,
+                #60a5fa 85% 100%
+            );
+            mask: radial-gradient(circle at center, transparent 55%, black 56%);
+            -webkit-mask: radial-gradient(circle at center, transparent 55%, black 56%);
+            animation: rotateDonut 2s ease-out;
+        }
+
+        @keyframes rotateDonut {
+            from { transform: rotate(-90deg); }
+            to { transform: rotate(0); }
+        }
+
+        .donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .legend-color.critical { background: #ef4444; }
+        .legend-color.high { background: #f97316; }
+        .legend-color.medium { background: #facc15; }
+        .legend-color.low { background: #4ade80; }
+        .legend-color.minimal { background: #60a5fa; }
+
+        .legend-label {
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .legend-value {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-left: auto;
+        }
+
+        /* Demo button */
+        .demo-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .demo-btn:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: #1f2937;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 500;
+            z-index: 1000;
+            border-left: 5px solid #3b82f6;
+            animation: toastSlideIn 0.5s ease;
+            max-width: 350px;
+        }
+
+        .toast.success { border-left-color: #10b981; }
+        .toast.warning { border-left-color: #f97316; }
+        .toast.info { border-left-color: #3b82f6; }
+
+        @keyframes toastSlideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .hidden { display: none; }
+
+        /* Animation delays */
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+            }
+            .sidebar nav ul { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+            .sidebar nav ul li { flex: 1 1 auto; }
+            .logout { margin-top: 1rem; }
+            .top-nav { flex-direction: column; align-items: start; gap: 1rem; }
+            .nav-right { width: 100%; justify-content: space-between; }
+            .donut-container { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">GigShield AI</div>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="policy.html"><i class="fas fa-file-contract"></i> Policy</a></li>
+                <li><a href="claims.html"><i class="fas fa-history"></i> Claims</a></li>
+                <li class="active"><a href="/admin"><i class="fas fa-user-shield"></i> Admin</a></li>
+            </ul>
+        </nav>
+        <div class="logout">
+            <ul>
+                <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- TOP NAVBAR -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <h2>Admin Dashboard</h2>
+                <p>System overview & analytics</p>
+            </div>
+            <div class="nav-right">
+                <div class="admin-info">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Admin</span>
+                </div>
+                <div class="notifications" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge" id="notificationBadge">5</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS CARDS -->
+        <div class="stats-grid">
+            <div class="stat-card delay-1">
+                <div class="stat-info">
+                    <h3>Total Workers Insured</h3>
+                    <div class="stat-number">1,284</div>
+                </div>
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+            </div>
+            <div class="stat-card delay-2">
+                <div class="stat-info">
+                    <h3>Active Disruptions</h3>
+                    <div class="stat-number">3</div>
+                </div>
+                <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            </div>
+            <div class="stat-card delay-3">
+                <div class="stat-info">
+                    <h3>Claims Triggered</h3>
+                    <div class="stat-number">47</div>
+                </div>
+                <div class="stat-icon"><i class="fas fa-file-invoice"></i></div>
+            </div>
+            <div class="stat-card delay-4">
+                <div class="stat-info">
+                    <h3>Fraud Alerts</h3>
+                    <div class="stat-number">8</div>
+                </div>
+                <div class="stat-icon"><i class="fas fa-shield-alt"></i></div>
+            </div>
+        </div>
+
+        <!-- CHARTS SECTION -->
+        <div class="charts-grid">
+            <!-- Claims per city -->
+            <div class="chart-card delay-1">
+                <div class="chart-header">
+                    <i class="fas fa-city"></i>
+                    <h3>Claims per City</h3>
+                </div>
+                <div class="city-bars">
+                    <div class="bar-item">
+                        <span class="bar-label">Mumbai</span>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="--target-width: 85%;"></div>
+                        </div>
+                        <span class="bar-value">85</span>
+                    </div>
+                    <div class="bar-item">
+                        <span class="bar-label">Delhi</span>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="--target-width: 62%;"></div>
+                        </div>
+                        <span class="bar-value">62</span>
+                    </div>
+                    <div class="bar-item">
+                        <span class="bar-label">Bangalore</span>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="--target-width: 48%;"></div>
+                        </div>
+                        <span class="bar-value">48</span>
+                    </div>
+                    <div class="bar-item">
+                        <span class="bar-label">Chennai</span>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="--target-width: 33%;"></div>
+                        </div>
+                        <span class="bar-value">33</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disruptions over time -->
+            <div class="chart-card delay-2">
+                <div class="chart-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Disruptions Over Time</h3>
+                </div>
+                <div class="line-chart">
+                    <div class="line-point">
+                        <div class="point-line" style="--line-height: 40px;"></div>
+                        <div class="point-dot"></div>
+                        <span class="point-label">Mon</span>
+                    </div>
+                    <div class="line-point">
+                        <div class="point-line" style="--line-height: 70px;"></div>
+                        <div class="point-dot"></div>
+                        <span class="point-label">Tue</span>
+                    </div>
+                    <div class="line-point">
+                        <div class="point-line" style="--line-height: 55px;"></div>
+                        <div class="point-dot"></div>
+                        <span class="point-label">Wed</span>
+                    </div>
+                    <div class="line-point">
+                        <div class="point-line" style="--line-height: 80px;"></div>
+                        <div class="point-dot"></div>
+                        <span class="point-label">Thu</span>
+                    </div>
+                    <div class="line-point">
+                        <div class="point-line" style="--line-height: 65px;"></div>
+                        <div class="point-dot"></div>
+                        <span class="point-label">Fri</span>
+                    </div>
+                    <div class="line-point">
+                        <div class="point-line" style="--line-height: 45px;"></div>
+                        <div class="point-dot"></div>
+                        <span class="point-label">Sat</span>
+                    </div>
+                    <div class="line-point">
+                        <div class="point-line" style="--line-height: 30px;"></div>
+                        <div class="point-dot"></div>
+                        <span class="point-label">Sun</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Distribution -->
+            <div class="chart-card delay-3" style="grid-column: span 1;">
+                <div class="chart-header">
+                    <i class="fas fa-chart-pie"></i>
+                    <h3>Risk Distribution</h3>
+                </div>
+                <div class="donut-container">
+                    <div class="donut"></div>
+                    <div class="donut-legend">
+                        <div class="legend-item">
+                            <div class="legend-color critical"></div>
+                            <span class="legend-label">Critical</span>
+                            <span class="legend-value">15%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color high"></div>
+                            <span class="legend-label">High</span>
+                            <span class="legend-value">20%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color medium"></div>
+                            <span class="legend-label">Medium</span>
+                            <span class="legend-value">25%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color low"></div>
+                            <span class="legend-label">Low</span>
+                            <span class="legend-value">25%</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color minimal"></div>
+                            <span class="legend-label">Minimal</span>
+                            <span class="legend-value">15%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo button to simulate data refresh -->
+        <button class="demo-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh Analytics</button>
+    </main>
+
+    <!-- Toast container -->
+    <div id="toast" class="toast hidden">
+        <i class="fas fa-info-circle"></i>
+        <span id="toast-message"></span>
+    </div>
+
+    <script>
+        (function() {
+            // Show welcome toast
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    showToast('📊 Admin dashboard loaded', 'info');
+                }, 800);
+            });
+
+            function showToast(message, type = 'info') {
+                const toast = document.getElementById('toast');
+                const msgSpan = document.getElementById('toast-message');
+                const icon = toast.querySelector('i');
+
+                if (type === 'success') icon.className = 'fas fa-check-circle';
+                else if (type === 'warning') icon.className = 'fas fa-exclamation-triangle';
+                else icon.className = 'fas fa-info-circle';
+
+                msgSpan.textContent = message;
+                toast.className = `toast ${type}`;
+                toast.classList.remove('hidden');
+
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 4000);
+            }
+
+            // Notification bell
+            document.getElementById('notificationBell').addEventListener('click', function() {
+                showToast('🔔 5 new fraud alerts', 'warning');
+            });
+
+            // Refresh button demo
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                showToast('🔄 Analytics data refreshed', 'success');
+                // Optionally, you could update some numbers dynamically
+                const badge = document.getElementById('notificationBadge');
+                let count = parseInt(badge.textContent) || 5;
+                badge.textContent = count + 1;
+            });
+
+            // Hover effect on bars (optional)
+            document.querySelectorAll('.bar-fill').forEach(bar => {
+                bar.addEventListener('mouseenter', function() {
+                    this.style.opacity = '0.8';
+                });
+                bar.addEventListener('mouseleave', function() {
+                    this.style.opacity = '1';
+                });
+            });
+        })();
+    </script>
+<script src="api.js"></script>
+<script>
+
+(async function() {
+    try {
+        const data = await apiGet('/analytics');
+
+        // Update all stat numbers
+        document.querySelectorAll('[id*="total-workers"], [id*="totalWorkers"], .stat-workers').forEach(el => {
+            el.textContent = data.total_workers;
+        });
+        document.querySelectorAll('[id*="total-claims"], [id*="totalClaims"], .stat-claims').forEach(el => {
+            el.textContent = data.total_claims;
+        });
+        document.querySelectorAll('[id*="fraud"], .stat-fraud').forEach(el => {
+            el.textContent = data.fraud_alerts;
+        });
+        document.querySelectorAll('[id*="disruption"], .stat-disruptions').forEach(el => {
+            el.textContent = data.active_disruptions.length;
+        });
+        document.querySelectorAll('[id*="payout"], .stat-payout').forEach(el => {
+            if (data.claims) el.textContent = '₹' + data.claims.total_payout;
+        });
+
+        // Fire trigger button
+        const fireBtn = document.querySelector('#triggerBtn, #fireBtn, button[id*="trigger"]');
+        if (fireBtn) {
+            fireBtn.addEventListener('click', async function() {
+                const city = document.querySelector('#city, #triggerCity')?.value || 'mumbai';
+                const rainfall = parseFloat(document.querySelector('#rainfall, #rain')?.value || 75);
+                const temperature = parseFloat(document.querySelector('#temperature, #temp')?.value || 30);
+                const aqi = parseFloat(document.querySelector('#aqi')?.value || 200);
+
+                try {
+                    const result = await apiPost('/trigger', { city, temperature, rainfall, aqi });
+                    alert('Trigger fired! Claims created: ' + result.claims_created + ' | Total payout: ₹' + result.total_payout_inr);
+                    location.reload();
+                } catch(err) {
+                    alert('Error: ' + err.message);
+                }
+            });
+        }
+
+    } catch(err) {
+        console.log('Admin load error:', err.message);
+    }
+
+    // Fix logout
+    document.querySelectorAll('a').forEach(a => {
+        if (a.textContent.includes('Logout')) {
+            a.href = '#';
+            a.addEventListener('click', e => { e.preventDefault(); clearWorker(); window.location.href = 'login.html'; });
+        }
+    });
+})();
+
+</script>
+</body>
+</html>

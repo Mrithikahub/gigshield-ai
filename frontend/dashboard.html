@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GigShield AI – Worker Dashboard</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f4f7fc;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #0b2a4f 0%, #1b4a7a 100%);
+            color: white;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .sidebar .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+            letter-spacing: -0.5px;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+            to { text-shadow: 0 0 20px rgba(255,255,255,0.7); }
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .sidebar nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.2rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar nav ul li a i {
+            width: 24px;
+            font-size: 1.2rem;
+        }
+
+        .sidebar nav ul li a:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .sidebar nav ul li.active a {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .logout {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 1.5rem;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* ===== TOP NAVBAR ===== */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-left h2 {
+            font-size: 1.5rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .nav-left p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .worker-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #f8fafc;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+        }
+
+        .worker-info i {
+            color: #3b82f6;
+            font-size: 1.2rem;
+        }
+
+        .worker-info span {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .notifications {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notifications i {
+            font-size: 1.4rem;
+            color: #64748b;
+            transition: color 0.3s;
+        }
+
+        .notifications:hover i {
+            color: #3b82f6;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 1rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* ===== CARDS GRID ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1.8rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease backwards;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header i {
+            font-size: 1.8rem;
+            color: #3b82f6;
+            background: #eef2ff;
+            padding: 0.8rem;
+            border-radius: 1rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        /* Weather Card */
+        .weather-detail {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .weather-item {
+            flex: 1 1 40%;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #475569;
+        }
+
+        .weather-item i {
+            width: 24px;
+            color: #3b82f6;
+        }
+
+        .weather-temp {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0.5rem 0;
+        }
+
+        .weather-desc {
+            color: #64748b;
+            text-transform: capitalize;
+        }
+
+        /* Disruption Banner */
+        .alert-banner {
+            background: #fff3cd;
+            border-left: 6px solid #f97316;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideInRight 0.5s ease, glowAlert 2s infinite alternate;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes glowAlert {
+            from { box-shadow: 0 0 5px #f97316; }
+            to { box-shadow: 0 0 20px #f97316; }
+        }
+
+        .alert-banner i {
+            font-size: 2rem;
+            color: #f97316;
+        }
+
+        .alert-content h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #7b3a00;
+        }
+
+        .alert-content p {
+            color: #9a5a1a;
+        }
+
+        /* Risk Card */
+        .risk-level {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .risk-critical { background: #fee2e2; color: #b91c1c; }
+        .risk-high { background: #ffedd5; color: #c2410c; }
+        .risk-medium { background: #fef9c3; color: #a16207; }
+        .risk-low { background: #dcfce7; color: #166534; }
+
+        .risk-score {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .premium-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #059669;
+        }
+
+        .forecast-reason {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+        }
+
+        .recommendation {
+            background: #dbeafe;
+            padding: 1rem;
+            border-radius: 1rem;
+            color: #1e40af;
+            font-weight: 500;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: #1f2937;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 500;
+            z-index: 1000;
+            border-left: 5px solid #3b82f6;
+            animation: toastSlideIn 0.5s ease;
+            max-width: 350px;
+        }
+
+        .toast.info { border-left-color: #3b82f6; }
+        .toast.success { border-left-color: #10b981; }
+        .toast.warning { border-left-color: #f97316; }
+        .toast.error { border-left-color: #ef4444; }
+
+        @keyframes toastSlideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .hidden { display: none; }
+
+        /* Simulate alert button (for demo) */
+        .demo-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .demo-btn:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+            }
+            .sidebar nav ul { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+            .sidebar nav ul li { flex: 1 1 auto; }
+            .logout { margin-top: 1rem; }
+            .top-nav { flex-direction: column; align-items: start; gap: 1rem; }
+            .nav-right { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body><script>
+(function(){
+    var s = localStorage.getItem("gs_worker");
+    if (!s) { window.location.replace("login.html"); }
+})();
+</script>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">GigShield AI</div>
+        <nav>
+            <ul>
+                <li class="active"><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="policy.html"><i class="fas fa-file-contract"></i> Policy</a></li>
+                <li><a href="claims.html"><i class="fas fa-history"></i> Claims</a></li>
+                <li><a href="admin.html"><i class="fas fa-user-shield"></i> Admin</a></li>
+            </ul>
+        </nav>
+        <div class="logout">
+            <ul>
+                <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- TOP NAVBAR -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <h2>Worker Dashboard</h2>
+                <p id="welcome-msg">Welcome back 👋</p>
+            </div>
+            <div class="nav-right">
+                <div style="background:#1e3a5f;padding:0.5rem 1rem;border-radius:2rem;display:flex;align-items:center;gap:0.5rem;">
+                    <i class="fas fa-id-badge" style="color:#60a5fa"></i>
+                    <span id="worker-id-display" style="color:white;font-weight:700;font-size:0.85rem;letter-spacing:1px">Loading...</span>
+                    <button onclick="copyWorkerId()" title="Copy Worker ID" style="background:none;border:none;color:#60a5fa;cursor:pointer;padding:0"><i class="fas fa-copy"></i></button>
+                </div>
+                <div class="worker-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Mumbai</span>
+                </div>
+                <div class="notifications" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge" id="notificationBadge">2</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DISRUPTION ALERT BANNER (always visible for demo) -->
+        <div class="alert-banner" id="alertBanner">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div class="alert-content">
+                <h4>⚠ Heavy Rain Alert</h4>
+                <p>Deliveries may be halted due to heavy rainfall. Stay safe!</p>
+            </div>
+        </div>
+
+        <!-- CARDS GRID -->
+        <div class="cards-grid">
+            <!-- Weather Card -->
+            <div class="card" style="animation-delay: 0.1s;">
+                <div class="card-header">
+                    <i class="fas fa-cloud-sun"></i>
+                    <h3>Weather Today</h3>
+                </div>
+                <div class="weather-temp">28°C</div>
+                <div class="weather-desc">Clear Sky</div>
+                <div class="weather-detail">
+                    <div class="weather-item"><i class="fas fa-wind"></i> Wind: 3.8 m/s</div>
+                    <div class="weather-item"><i class="fas fa-tint"></i> Humidity: 59%</div>
+                    <div class="weather-item"><i class="fas fa-leaf"></i> AQI: 150</div>
+                    <div class="weather-item"><i class="fas fa-city"></i> Mumbai</div>
+                </div>
+            </div>
+
+            <!-- Risk Assessment Card -->
+            <div class="card" style="animation-delay: 0.2s;">
+                <div class="card-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Risk Assessment</h3>
+                </div>
+                <div class="risk-level risk-critical">CRITICAL</div>
+                <div class="risk-score">0.76</div>
+                <p style="color:#64748b; margin: 0.5rem 0;">Risk Score</p>
+                <div style="margin-top: 1rem; font-weight: 600;">Weekly Premium: <span style="color:#059669;">₹175</span></div>
+            </div>
+
+            <!-- Premium Card -->
+            <div class="card" style="animation-delay: 0.3s;">
+                <div class="card-header">
+                    <i class="fas fa-rupee-sign"></i>
+                    <h3>Premium Details</h3>
+                </div>
+                <div class="premium-amount">₹175</div>
+                <p style="color:#64748b;">per week</p>
+                <div style="margin-top: 1rem; background: #f1f5f9; padding: 1rem; border-radius: 1rem;">
+                    <p><i class="fas fa-check-circle" style="color:#10b981;"></i> Weather Disruption Coverage</p>
+                    <p><i class="fas fa-check-circle" style="color:#10b981;"></i> Active until 24 Mar 2026</p>
+                </div>
+            </div>
+
+            <!-- Tomorrow Forecast Card -->
+            <div class="card" style="animation-delay: 0.4s;">
+                <div class="card-header">
+                    <i class="fas fa-calendar-day"></i>
+                    <h3>Tomorrow's Forecast</h3>
+                </div>
+                <div class="risk-level risk-high">HIGH RISK</div>
+                <div class="forecast-reason">
+                    <i class="fas fa-cloud-rain"></i> Heavy rainfall expected
+                </div>
+                <div class="recommendation">
+                    <i class="fas fa-lightbulb"></i> Increase coverage for tomorrow
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo button to trigger notification toast -->
+        <button class="demo-btn" id="demoToastBtn"><i class="fas fa-bell"></i> Simulate New Alert</button>
+    </main>
+
+    <!-- Toast Notification (hidden initially) -->
+    <div id="toast" class="toast hidden">
+        <i class="fas fa-info-circle"></i>
+        <span id="toast-message"></span>
+    </div>
+
+    <script>
+        (function() {
+            // Show initial toast on page load (welcome / notification)
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    showToast('New disruption alert: Heavy rain predicted', 'warning');
+                }, 1000);
+            });
+
+            // Toast function
+            function showToast(message, type = 'info') {
+                const toast = document.getElementById('toast');
+                const msgSpan = document.getElementById('toast-message');
+                const icon = toast.querySelector('i');
+
+                // Set icon based on type
+                if (type === 'warning') icon.className = 'fas fa-exclamation-triangle';
+                else if (type === 'success') icon.className = 'fas fa-check-circle';
+                else if (type === 'error') icon.className = 'fas fa-times-circle';
+                else icon.className = 'fas fa-info-circle';
+
+                msgSpan.textContent = message;
+                toast.className = `toast ${type}`;
+                toast.classList.remove('hidden');
+
+                // Hide after 4 seconds
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 4000);
+            }
+
+            // Demo button to trigger new toast
+            document.getElementById('demoToastBtn').addEventListener('click', function() {
+                showToast('⚠️ Extreme heat alert for tomorrow!', 'warning');
+                // Also increment notification badge
+                const badge = document.getElementById('notificationBadge');
+                let count = parseInt(badge.textContent) || 0;
+                badge.textContent = count + 1;
+            });
+
+            // Optional: click on notification bell shows toast
+            document.getElementById('notificationBell').addEventListener('click', function() {
+                showToast('You have 2 unread alerts', 'info');
+            });
+
+            // For demonstration, we can also animate the alert banner on hover
+            const alertBanner = document.getElementById('alertBanner');
+            alertBanner.addEventListener('mouseenter', function() {
+                this.style.animation = 'glowAlert 0.5s infinite alternate';
+            });
+            alertBanner.addEventListener('mouseleave', function() {
+                this.style.animation = 'glowAlert 2s infinite alternate';
+            });
+        })();
+    </script>
+<script src="api.js"></script>
+<script>
+
+(async function() {
+    const worker = getWorker();
+    if (!worker) { window.location.href = 'login.html'; return; }
+
+    // Update worker name and city in UI
+    document.querySelectorAll('.nav-left p').forEach(el => {
+        document.getElementById('welcome-msg').textContent = 'Welcome back, ' + worker.name + ' 👋';
+        document.getElementById('worker-id-display').textContent = worker.worker_id;
+    });
+    document.querySelectorAll('.worker-info span').forEach(el => {
+        if (el.textContent === 'Mumbai') el.textContent = worker.city;
+    });
+
+    try {
+        // Load premium data
+        const premium = await apiGet('/premium/' + worker.worker_id);
+
+        // Update risk score
+        document.querySelectorAll('.risk-score').forEach(el => {
+            el.textContent = premium.risk_score;
+        });
+
+        // Update risk level badge
+        document.querySelectorAll('.risk-level').forEach(el => {
+            el.textContent = premium.risk_level.toUpperCase();
+            el.className = 'risk-level risk-' + premium.risk_level;
+        });
+
+        // Update premium amount
+        document.querySelectorAll('.premium-amount').forEach(el => {
+            el.textContent = '₹' + premium.weekly_premium;
+        });
+        document.querySelectorAll('.card').forEach(card => {
+            const header = card.querySelector('h3');
+            if (header && header.textContent.includes('Risk')) {
+                const span = card.querySelector('span[style*="059669"]');
+                if (span) span.textContent = '₹' + premium.weekly_premium;
+            }
+        });
+
+        // Load analytics for active disruptions
+        const analytics = await apiGet('/analytics');
+        if (analytics.active_disruptions && analytics.active_disruptions.length > 0) {
+            const banner = document.getElementById('alertBanner');
+            if (banner) {
+                banner.querySelector('h4').textContent = '⚠ Active Disruption: ' + analytics.active_disruptions[0].replace('_', ' ');
+                banner.querySelector('p').textContent = 'Auto-claim has been triggered for your city.';
+            }
+        }
+    } catch(err) {
+        console.log('Dashboard load error:', err.message);
+    }
+
+    // Fix logout
+    document.querySelectorAll('a').forEach(a => {
+        if (a.textContent.includes('Logout')) {
+            a.href = '#';
+            a.addEventListener('click', function(e) {
+                e.preventDefault();
+                clearWorker();
+                window.location.href = 'login.html';
+            });
+        }
+    });
+})();
+
+
+    function copyWorkerId() {
+        const wid = getWorker()?.worker_id;
+        if (!wid) return;
+        navigator.clipboard.writeText(wid);
+        alert('Worker ID copied: ' + wid);
+    }
+    </script>
+</body>
+</html>

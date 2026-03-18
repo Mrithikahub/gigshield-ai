@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GigShield AI – Claims History</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f4f7fc;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #0b2a4f 0%, #1b4a7a 100%);
+            color: white;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .sidebar .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+            letter-spacing: -0.5px;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+            to { text-shadow: 0 0 20px rgba(255,255,255,0.7); }
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .sidebar nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.2rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar nav ul li a i {
+            width: 24px;
+            font-size: 1.2rem;
+        }
+
+        .sidebar nav ul li a:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .sidebar nav ul li.active a {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .logout {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 1.5rem;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* ===== TOP NAVBAR ===== */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-left h2 {
+            font-size: 1.5rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .nav-left p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .worker-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #f8fafc;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+        }
+
+        .worker-info i {
+            color: #3b82f6;
+            font-size: 1.2rem;
+        }
+
+        .worker-info span {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .notifications {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notifications i {
+            font-size: 1.4rem;
+            color: #64748b;
+            transition: color 0.3s;
+        }
+
+        .notifications:hover i {
+            color: #3b82f6;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 1rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* ===== CLAIMS GRID ===== */
+        .claims-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.8rem;
+        }
+
+        .claim-card {
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1.8rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease backwards;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .claim-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .claim-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .claim-id {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            background: #f1f5f9;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+        }
+
+        .status-badge {
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .status-approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .claim-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .detail-label {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .fraud-score {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .fraud-bar {
+            flex: 1;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .fraud-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 1rem;
+        }
+
+        .fraud-low { background: #10b981; }
+        .fraud-medium { background: #f97316; }
+        .fraud-high { background: #ef4444; }
+
+        .fraud-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .fraud-low-text { color: #10b981; }
+        .fraud-medium-text { color: #f97316; }
+        .fraud-high-text { color: #ef4444; }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: #1f2937;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 500;
+            z-index: 1000;
+            border-left: 5px solid #3b82f6;
+            animation: toastSlideIn 0.5s ease;
+            max-width: 350px;
+        }
+
+        .toast.success { border-left-color: #10b981; }
+        .toast.warning { border-left-color: #f97316; }
+        .toast.info { border-left-color: #3b82f6; }
+
+        @keyframes toastSlideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .hidden { display: none; }
+
+        /* Demo button */
+        .demo-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 2rem;
+        }
+
+        .demo-btn:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+            }
+            .sidebar nav ul { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+            .sidebar nav ul li { flex: 1 1 auto; }
+            .logout { margin-top: 1rem; }
+            .top-nav { flex-direction: column; align-items: start; gap: 1rem; }
+            .nav-right { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body><script>
+(function(){
+    var s = localStorage.getItem("gs_worker");
+    if (!s) { window.location.replace("login.html"); }
+})();
+</script>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">GigShield AI</div>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="policy.html"><i class="fas fa-file-contract"></i> Policy</a></li>
+                <li class="active"><a href="claims.html"><i class="fas fa-history"></i> Claims</a></li>
+                <li><a href="admin.html"><i class="fas fa-user-shield"></i> Admin</a></li>
+            </ul>
+        </nav>
+        <div class="logout">
+            <ul>
+                <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- TOP NAVBAR -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <h2>Claims History</h2>
+                <p>Your recent claims and their status</p>
+            </div>
+            <div class="nav-right">
+                <div class="worker-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Mumbai</span>
+                </div>
+                <div class="notifications" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge" id="notificationBadge">3</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CLAIMS GRID -->
+        <div class="claims-grid">
+            <!-- Claim 1 -->
+            <div class="claim-card" style="animation-delay: 0.1s;">
+                <div class="claim-header">
+                    <span class="claim-id">CLM-9001</span>
+                    <span class="status-badge status-approved">Approved</span>
+                </div>
+                <div class="claim-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Claim Amount</span>
+                        <span class="detail-value">₹350</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Date Filed</span>
+                        <span class="detail-value">15 Mar 2026</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Fraud Risk</span>
+                        <div class="fraud-score">
+                            <div class="fraud-bar">
+                                <div class="fraud-fill fraud-low" style="width: 25%;"></div>
+                            </div>
+                            <span class="fraud-text fraud-low-text">Low</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Claim 2 -->
+            <div class="claim-card" style="animation-delay: 0.2s;">
+                <div class="claim-header">
+                    <span class="claim-id">CLM-9002</span>
+                    <span class="status-badge status-pending">Pending</span>
+                </div>
+                <div class="claim-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Claim Amount</span>
+                        <span class="detail-value">₹500</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Date Filed</span>
+                        <span class="detail-value">16 Mar 2026</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Fraud Risk</span>
+                        <div class="fraud-score">
+                            <div class="fraud-bar">
+                                <div class="fraud-fill fraud-medium" style="width: 62%;"></div>
+                            </div>
+                            <span class="fraud-text fraud-medium-text">Medium</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Claim 3 -->
+            <div class="claim-card" style="animation-delay: 0.3s;">
+                <div class="claim-header">
+                    <span class="claim-id">CLM-9003</span>
+                    <span class="status-badge status-rejected">Rejected</span>
+                </div>
+                <div class="claim-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Claim Amount</span>
+                        <span class="detail-value">₹200</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Date Filed</span>
+                        <span class="detail-value">10 Mar 2026</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Fraud Risk</span>
+                        <div class="fraud-score">
+                            <div class="fraud-bar">
+                                <div class="fraud-fill fraud-high" style="width: 88%;"></div>
+                            </div>
+                            <span class="fraud-text fraud-high-text">High</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Claim 4 -->
+            <div class="claim-card" style="animation-delay: 0.4s;">
+                <div class="claim-header">
+                    <span class="claim-id">CLM-9004</span>
+                    <span class="status-badge status-approved">Approved</span>
+                </div>
+                <div class="claim-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Claim Amount</span>
+                        <span class="detail-value">₹420</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Date Filed</span>
+                        <span class="detail-value">12 Mar 2026</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Fraud Risk</span>
+                        <div class="fraud-score">
+                            <div class="fraud-bar">
+                                <div class="fraud-fill fraud-low" style="width: 15%;"></div>
+                            </div>
+                            <span class="fraud-text fraud-low-text">Low</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo button to simulate new claim notification -->
+        <button class="demo-btn" id="demoToastBtn"><i class="fas fa-bolt"></i> Trigger Disruption Event</button>
+    </main>
+
+    <!-- Toast container -->
+    <div id="toast" class="toast hidden">
+        <i class="fas fa-info-circle"></i>
+        <span id="toast-message"></span>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+    const worker = getWorker();
+    if (!worker) window.location.href = 'login.html';
+
+    function showToast(message, type='info') {
+        const toast = document.getElementById('toast');
+        const msgSpan = document.getElementById('toast-message');
+        const icon = toast.querySelector('i');
+        if (type === 'success') icon.className = 'fas fa-check-circle';
+        else if (type === 'warning') icon.className = 'fas fa-exclamation-triangle';
+        else if (type === 'error') icon.className = 'fas fa-times-circle';
+        else icon.className = 'fas fa-info-circle';
+        msgSpan.textContent = message;
+        toast.className = `toast ${type}`;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 4000);
+    }
+
+    function getFraudClass(score) {
+        if (score < 0.3) return { fill: 'fraud-low', text: 'fraud-low-text', label: 'Low', width: Math.round(score*100) };
+        if (score < 0.6) return { fill: 'fraud-medium', text: 'fraud-medium-text', label: 'Medium', width: Math.round(score*100) };
+        return { fill: 'fraud-high', text: 'fraud-high-text', label: 'High', width: Math.round(score*100) };
+    }
+
+    function getStatusClass(status) {
+        if (status === 'approved') return 'status-approved';
+        if (status === 'rejected') return 'status-rejected';
+        return 'status-pending';
+    }
+
+    function renderClaims(claims) {
+        const grid = document.querySelector('.claims-grid');
+        if (!claims || claims.length === 0) {
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;background:white;border-radius:1.8rem;color:#64748b"><i class="fas fa-folder-open" style="font-size:3rem;margin-bottom:1rem;display:block;"></i><h3>No claims yet</h3><p>Click "Simulate New Claim" to create one</p></div>';
+            return;
+        }
+        grid.innerHTML = claims.map((c, i) => {
+            const fraud = getFraudClass(c.fraud_score);
+            const date = new Date(c.created_at).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'});
+            return `
+            <div class="claim-card" style="animation-delay:${i*0.1}s">
+                <div class="claim-header">
+                    <span class="claim-id">${c.claim_id}</span>
+                    <span class="status-badge ${getStatusClass(c.status)}">${c.status.charAt(0).toUpperCase()+c.status.slice(1)}</span>
+                </div>
+                <div class="claim-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Trigger Type</span>
+                        <span class="detail-value">${c.trigger_type.replace(/_/g,' ')}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Claim Amount</span>
+                        <span class="detail-value">₹${c.amount}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Date Filed</span>
+                        <span class="detail-value">${date}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Location</span>
+                        <span class="detail-value">${c.location || worker.city}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Fraud Risk</span>
+                        <div class="fraud-score">
+                            <div class="fraud-bar">
+                                <div class="fraud-fill ${fraud.fill}" style="width:${fraud.width}%"></div>
+                            </div>
+                            <span class="fraud-text ${fraud.text}">${fraud.label} (${c.fraud_score})</span>
+                        </div>
+                    </div>
+                    ${c.payout_receipt ? `
+                    <div class="detail-row">
+                        <span class="detail-label">Transaction ID</span>
+                        <span class="detail-value" style="color:#059669;font-size:0.85rem">${c.payout_receipt.transaction_id}</span>
+                    </div>` : ''}
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    async function loadClaims() {
+        try {
+            const data = await apiGet('/claims/' + worker.worker_id);
+            renderClaims(data.claims || []);
+            // Update city in nav
+            document.querySelectorAll('.worker-info span').forEach(el => {
+                el.textContent = worker.city.charAt(0).toUpperCase() + worker.city.slice(1);
+            });
+            showToast('Claims loaded — ' + (data.total_claims || 0) + ' total', 'info');
+        } catch(err) {
+            showToast('Could not load claims: ' + err.message, 'warning');
+        }
+    }
+
+    // Load on page start
+    window.addEventListener('load', loadClaims);
+
+    // Cycle through all trigger types for demo
+    const TRIGGERS = [
+        { temperature: 30, rainfall: 75, aqi: 200, label: 'Heavy Rain' },
+        { temperature: 45, rainfall: 0,  aqi: 200, label: 'Extreme Heat' },
+        { temperature: 30, rainfall: 0,  aqi: 420, label: 'High AQI' },
+    ];
+    let triggerIndex = 0;
+
+    document.getElementById('demoToastBtn').addEventListener('click', async function() {
+        const btn = this;
+        btn.disabled = true;
+        const t = TRIGGERS[triggerIndex % TRIGGERS.length];
+        triggerIndex++;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Simulating ' + t.label + '...';
+        try {
+            const result = await apiPost('/trigger', {
+                city: worker.city,
+                temperature: t.temperature,
+                rainfall: t.rainfall,
+                aqi: t.aqi
+            });
+
+            if (result.triggered) {
+                showToast('✅ ' + t.label + ' triggered! ₹' + result.total_payout_inr + ' payout.', 'success');
+                setTimeout(loadClaims, 1000);
+            } else {
+                showToast('⚠ Already claimed for ' + t.label + ' today. Try again tomorrow or use /docs to reset.', 'warning');
+            }
+        } catch(err) {
+            showToast('Error: ' + err.message, 'warning');
+        }
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-bolt"></i> Trigger Disruption Event';
+    });
+
+    // Notification bell
+    document.getElementById('notificationBell').addEventListener('click', function() {
+        showToast('🔔 Click Simulate to generate a new claim', 'info');
+    });
+
+    // Logout fix
+    document.querySelectorAll('a').forEach(a => {
+        if (a.textContent.includes('Logout')) {
+            a.href = '#';
+            a.addEventListener('click', e => { e.preventDefault(); clearWorker(); window.location.href = 'login.html'; });
+        }
+    });
+    </script>
+</body>
+</html>
