@@ -1,6 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/register/page": "app/register/page.js",
-  "/premium/[workerId]/page": "app/premium/[workerId]/page.js",
-  "/dashboard/[workerId]/page": "app/dashboard/[workerId]/page.js"
-}
