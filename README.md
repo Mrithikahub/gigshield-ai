@@ -51,6 +51,9 @@ Workflow Diagram
 
 Worker Registration → Risk Assessment → Premium Calculation → Policy Purchase → Environmental Monitoring → Trigger Detection → Claim Generation → Fraud Check → Payout Processing
 
+<img width="481" height="928" alt="image" src="https://github.com/user-attachments/assets/cd0b2748-598e-47e5-b12a-ffe247972535" />
+
+
 Weekly Premium Model
 
 The platform uses a weekly subscription model aligned with gig workers’ earning cycles.
@@ -113,6 +116,9 @@ External APIs (Weather + AQI)
 Payment System
 
 The system follows a modular architecture where each component operates independently, enabling scalability and maintainability.
+
+<img width="1600" height="854" alt="image" src="https://github.com/user-attachments/assets/701d6e93-35af-4cb3-8210-42a0b48affb7" />
+
 
 Market Crash Handling
 
@@ -181,7 +187,7 @@ Weather API → Disruption Detection → Claim Trigger → Fraud Check → Payme
 
 Demo Video
 
-(Add link here)
+[Add Video Link Here]
 
 Future Scope
 
