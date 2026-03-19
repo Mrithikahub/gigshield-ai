@@ -1,7 +1,5 @@
 GigShield AI
-
 AI-Powered Parametric Insurance for Gig Workers
-
 Problem Statement
 
 India’s gig economy relies heavily on delivery workers from platforms such as Swiggy, Zomato, Zepto, and Amazon. These workers depend on daily earnings for their livelihood.
@@ -50,12 +48,8 @@ Fraud detection validates the claim
 Payout is processed
 
 Workflow Diagram
-<img width="481" height="928" alt="image" src="https://github.com/user-attachments/assets/6b257a96-03be-4c1f-8a20-45f0ac546f47" />
-
 
 Worker Registration → Risk Assessment → Premium Calculation → Policy Purchase → Environmental Monitoring → Trigger Detection → Claim Generation → Fraud Check → Payout Processing
-
-(Add workflow diagram image here)
 
 Weekly Premium Model
 
@@ -84,14 +78,16 @@ AQI crossing hazardous limits
 When a trigger condition is met, claims are processed instantly without manual verification.
 
 AI Integration
-
 Risk Prediction
+
 AI models analyze environmental factors such as rainfall, air quality, and temperature to estimate disruption risk.
 
 Dynamic Pricing
+
 Premiums are adjusted dynamically based on calculated risk levels and environmental conditions.
 
 Fraud Detection
+
 The system identifies suspicious claims using anomaly detection techniques such as duplicate claims, inconsistent data, and unusual activity patterns.
 
 Tech Stack
@@ -118,9 +114,6 @@ Payment System
 
 The system follows a modular architecture where each component operates independently, enabling scalability and maintainability.
 
-<img width="1600" height="854" alt="image" src="https://github.com/user-attachments/assets/72ad245a-0a8a-4824-8ab5-2a122dd831ec" />
-
-
 Market Crash Handling
 
 In scenarios where a large number of claims are triggered simultaneously due to widespread disruptions:
@@ -146,8 +139,6 @@ AI models analyze these patterns to assign a fraud score to each claim.
 
 Data Signals Used Beyond GPS
 
-To detect coordinated fraud attempts, the system evaluates:
-
 Historical movement patterns
 
 Device-level consistency
@@ -164,8 +155,6 @@ These signals help identify spoofing and coordinated fraud activity.
 
 UX Balance for Flagged Claims
 
-The system ensures fairness for genuine users:
-
 Low-risk claims are processed instantly
 
 Medium-risk claims undergo additional validation
@@ -176,8 +165,6 @@ Fallback logic ensures that users affected by poor network or real disruptions a
 
 Implementation Scope
 
-The current prototype includes:
-
 Core workflow implementation
 
 Location-based validation
@@ -187,8 +174,6 @@ Risk assessment and premium calculation
 Parametric trigger simulation
 
 Basic fraud detection logic
-
-The system is designed to be extended with real-time integrations and advanced AI models.
 
 Integration Flow
 
