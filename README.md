@@ -29,7 +29,7 @@ The system continuously monitors environmental conditions such as weather and po
 
 The platform also includes a dynamic premium calculation system that adjusts weekly pricing based on environmental risk factors.
 
-Workflow
+**Workflow**
 
 Worker registers on the platform (with location detection)
 
@@ -56,8 +56,8 @@ Worker Registration → Risk Assessment → Premium Calculation → Policy Purch
 <img width="481" height="928" alt="image" src="https://github.com/user-attachments/assets/cd0b2748-598e-47e5-b12a-ffe247972535" />
 
 
-Weekly Premium Model
-
+**Weekly Premium Model
+**
 The platform uses a weekly subscription model aligned with gig workers’ earning cycles.
 
 Premium is calculated based on:
@@ -70,8 +70,8 @@ Location factors
 
 This ensures affordability while maintaining risk-based pricing.
 
-Parametric Triggers
-
+**Parametric Triggers
+**
 The system uses predefined thresholds to trigger claims automatically:
 
 Rainfall above threshold
@@ -82,20 +82,22 @@ AQI crossing hazardous limits
 
 When a trigger condition is met, claims are processed instantly without manual verification.
 
-AI Integration
-Risk Prediction
-
+**AI Integration
+**
+**Risk Prediction
+**
 AI models analyze environmental factors such as rainfall, air quality, and temperature to estimate disruption risk.
 
-Dynamic Pricing
-
+**Dynamic Pricing
+**
 Premiums are adjusted dynamically based on calculated risk levels and environmental conditions.
 
-Fraud Detection
-
+**Fraud Detection
+**
 The system identifies suspicious claims using anomaly detection techniques such as duplicate claims, inconsistent data, and unusual activity patterns.
 
-Tech Stack
+**Tech Stack
+**
 Layer	Technology
 Frontend	React / Next.js
 Backend	Python (FastAPI)
@@ -122,7 +124,7 @@ The system follows a modular architecture where each component operates independ
 <img width="1600" height="854" alt="image" src="https://github.com/user-attachments/assets/701d6e93-35af-4cb3-8210-42a0b48affb7" />
 
 
-Market Crash Handling
+**Market** **Crash** **Handling**
 
 In scenarios where a large number of claims are triggered simultaneously due to widespread disruptions:
 
@@ -136,8 +138,8 @@ AI continuously adjusts pricing based on real-time risk
 
 This ensures the system remains financially sustainable even during high-volume claim events.
 
-Adversarial Defense & Anti-Spoofing Strategy
-Differentiation
+**Adversarial** **Defense** **&** **Anti-Spoofing** **Strategy**
+**Differentiation**
 
 The system differentiates between genuine users and spoofing actors using multi-layer validation rather than relying solely on GPS.
 
