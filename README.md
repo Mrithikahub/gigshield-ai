@@ -49,15 +49,15 @@ Fraud detection validates the claim
 
 Payout is processed
 
-Workflow Diagram
+**Workflow** **Diagram**
 
 Worker Registration → Risk Assessment → Premium Calculation → Policy Purchase → Environmental Monitoring → Trigger Detection → Claim Generation → Fraud Check → Payout Processing
 
 <img width="481" height="928" alt="image" src="https://github.com/user-attachments/assets/cd0b2748-598e-47e5-b12a-ffe247972535" />
 
 
-**Weekly Premium Model
-**
+**Weekly** **Premium** **Model**
+
 The platform uses a weekly subscription model aligned with gig workers’ earning cycles.
 
 Premium is calculated based on:
@@ -70,8 +70,8 @@ Location factors
 
 This ensures affordability while maintaining risk-based pricing.
 
-**Parametric Triggers
-**
+**Parametric** **Triggers**
+
 The system uses predefined thresholds to trigger claims automatically:
 
 Rainfall above threshold
@@ -82,22 +82,21 @@ AQI crossing hazardous limits
 
 When a trigger condition is met, claims are processed instantly without manual verification.
 
-**AI Integration
-**
-**Risk Prediction
-**
+**AI** **Integration**
+**Risk** **Prediction**
+
 AI models analyze environmental factors such as rainfall, air quality, and temperature to estimate disruption risk.
 
-**Dynamic Pricing
-**
+**Dynamic** **Pricing**
+
 Premiums are adjusted dynamically based on calculated risk levels and environmental conditions.
 
-**Fraud Detection
-**
+**Fraud** **Detection**
+
 The system identifies suspicious claims using anomaly detection techniques such as duplicate claims, inconsistent data, and unusual activity patterns.
 
-**Tech Stack
-**
+**Tech** **Stack**
+
 Layer	Technology
 Frontend	React / Next.js
 Backend	Python (FastAPI)
@@ -147,7 +146,7 @@ Legitimate users show consistent movement patterns, behavioral signals, and alig
 
 AI models analyze these patterns to assign a fraud score to each claim.
 
-Data Signals Used Beyond GPS
+**Data** **Signals** **Used** **Beyond** **GPS**
 
 Historical movement patterns
 
@@ -163,7 +162,7 @@ Correlation with real environmental conditions
 
 These signals help identify spoofing and coordinated fraud activity.
 
-UX Balance for Flagged Claims
+**UX** **Balance** **for** **Flagged** **Claims**
 
 Low-risk claims are processed instantly
 
@@ -173,7 +172,7 @@ High-risk claims are flagged for review
 
 Fallback logic ensures that users affected by poor network or real disruptions are not unfairly penalized.
 
-Implementation Scope
+**Implementation** **Scope**
 
 Core workflow implementation
 
@@ -185,15 +184,15 @@ Parametric trigger simulation
 
 Basic fraud detection logic
 
-Integration Flow
+**Integration** **Flow**
 
 Weather API → Disruption Detection → Claim Trigger → Fraud Check → Payment
 
-Demo Video
+**Demo** **Video**
 
 [Add Video Link Here]
 
-Future Scope
+**Future** **Scope**
 
 Integration with delivery platforms
 
@@ -203,6 +202,6 @@ Advanced AI prediction models
 
 Real-time analytics dashboard
 
-Conclusion
+**Conclusion**
 
 GigShield AI provides a structured and automated financial safety mechanism for gig workers, improving income stability during external disruptions.
