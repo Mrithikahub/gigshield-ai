@@ -1,10 +1,8 @@
-# GigShield AI
+GigShield AI
 
 AI-Powered Parametric Insurance for Gig Workers
 
----
-
-## Problem Statement
+Problem Statement
 
 India’s gig economy relies heavily on delivery workers from platforms such as Swiggy, Zomato, Zepto, and Amazon. These workers depend on daily earnings for their livelihood.
 
@@ -12,9 +10,18 @@ However, external disruptions such as heavy rainfall, extreme heat, severe pollu
 
 Currently, there is no simple and automated system that provides compensation for such disruption-based income loss.
 
----
+Target Users
 
-## Solution
+Food delivery partners (Swiggy, Zomato, Zepto)
+
+Logistics and e-commerce delivery workers
+
+Urban gig workers dependent on daily earnings
+
+Example persona:
+A delivery partner earning ₹500–₹1000 per day loses income completely during heavy rain or pollution spikes, with no backup or insurance support.
+
+Solution
 
 GigShield AI is an AI-powered parametric insurance platform designed to protect gig workers from income loss.
 
@@ -22,105 +29,185 @@ The system continuously monitors environmental conditions such as weather and po
 
 The platform also includes a dynamic premium calculation system that adjusts weekly pricing based on environmental risk factors.
 
----
+Workflow
 
-## Target Users
+Worker registers on the platform (with location detection)
 
-* Food delivery partners (Swiggy, Zomato, Zepto)
-* Logistics and e-commerce delivery workers
-* Urban gig workers dependent on daily earnings
+System performs AI-based risk assessment
 
----
+Weekly insurance premium is calculated
 
-## Workflow
+Worker purchases the policy
 
-1. Worker registers on the platform
-2. System performs AI-based risk assessment
-3. Weekly insurance premium is calculated
-4. Worker purchases the policy
-5. System continuously monitors environmental data
-6. Disruption is detected (rain, heat, pollution)
-7. Claim is triggered automatically
-8. Fraud detection validates the claim
-9. Payout is processed
+System continuously monitors environmental data
 
----
+Disruption is detected (rain, heat, pollution)
 
-## AI Integration
+Claim is triggered automatically
 
-### Risk Prediction
+Fraud detection validates the claim
 
-AI models analyze environmental factors such as rainfall, air quality, and temperature to estimate disruption risk.
+Payout is processed
 
-### Dynamic Pricing
+Workflow Diagram
+<img width="481" height="928" alt="image" src="https://github.com/user-attachments/assets/6b257a96-03be-4c1f-8a20-45f0ac546f47" />
 
-Premiums are adjusted dynamically based on calculated risk levels and environmental conditions.
 
-### Fraud Detection
+Worker Registration → Risk Assessment → Premium Calculation → Policy Purchase → Environmental Monitoring → Trigger Detection → Claim Generation → Fraud Check → Payout Processing
 
-The system identifies suspicious claims using anomaly detection techniques, such as duplicate claims or inconsistent data.
+(Add workflow diagram image here)
 
----
-
-## Pricing Model
+Weekly Premium Model
 
 The platform uses a weekly subscription model aligned with gig workers’ earning cycles.
 
 Premium is calculated based on:
 
-* Environmental conditions
-* Risk level
-* Location factors
+Environmental conditions
 
----
+Risk level
 
-## Tech Stack
+Location factors
 
-| Layer    | Technology                   |
-| -------- | ---------------------------- |
-| Frontend | React                        |
-| Backend  | Node.js / Python             |
-| AI/ML    | Python (Scikit-learn)        |
-| Database | MongoDB                      |
-| APIs     | Weather and Air Quality APIs |
-| Payments | Razorpay / Simulation        |
+This ensures affordability while maintaining risk-based pricing.
 
----
+Parametric Triggers
 
-## Architecture Diagram
-<img width="1600" height="854" alt="image" src="https://github.com/user-attachments/assets/c95062f1-7afd-42b8-9398-8d162c040dc0" />
+The system uses predefined thresholds to trigger claims automatically:
 
-![Architecture](docs/architecture.jpeg)
+Rainfall above threshold
 
-## Workflow Diagram
-<img width="241" height="464" alt="image" src="https://github.com/user-attachments/assets/23aa7b93-3a5a-4f10-b6bc-153bd47e63c1" />
+Temperature above extreme levels
+
+AQI crossing hazardous limits
+
+When a trigger condition is met, claims are processed instantly without manual verification.
+
+AI Integration
+
+Risk Prediction
+AI models analyze environmental factors such as rainfall, air quality, and temperature to estimate disruption risk.
+
+Dynamic Pricing
+Premiums are adjusted dynamically based on calculated risk levels and environmental conditions.
+
+Fraud Detection
+The system identifies suspicious claims using anomaly detection techniques such as duplicate claims, inconsistent data, and unusual activity patterns.
+
+Tech Stack
+Layer	Technology
+Frontend	React / Next.js
+Backend	Python (FastAPI)
+AI/ML	Scikit-learn
+Database	SQLite / MongoDB
+APIs	Weather and Air Quality APIs
+Payments	Razorpay / Simulation
+System Architecture
+
+Frontend (React/Next.js)
+↓
+Backend API (FastAPI)
+↓
+Risk Engine | Premium Calculator | Trigger Engine | Fraud Detection Module
+↓
+Database (SQLite/MongoDB)
+↓
+External APIs (Weather + AQI)
+↓
+Payment System
+
+The system follows a modular architecture where each component operates independently, enabling scalability and maintainability.
+
+<img width="1600" height="854" alt="image" src="https://github.com/user-attachments/assets/72ad245a-0a8a-4824-8ab5-2a122dd831ec" />
 
 
-![Workflow](docs/workflow.jpeg)
+Market Crash Handling
 
----
+In scenarios where a large number of claims are triggered simultaneously due to widespread disruptions:
 
-## Integration Flow
+Risk-based pricing helps balance payouts
+
+Predefined payout structures limit over-exposure
+
+Geographic diversification reduces concentrated risk
+
+AI continuously adjusts pricing based on real-time risk
+
+This ensures the system remains financially sustainable even during high-volume claim events.
+
+Adversarial Defense & Anti-Spoofing Strategy
+Differentiation
+
+The system differentiates between genuine users and spoofing actors using multi-layer validation rather than relying solely on GPS.
+
+Legitimate users show consistent movement patterns, behavioral signals, and alignment with real disruption conditions. Spoofed users exhibit anomalies such as unrealistic location changes, static behavior, or lack of activity correlation.
+
+AI models analyze these patterns to assign a fraud score to each claim.
+
+Data Signals Used Beyond GPS
+
+To detect coordinated fraud attempts, the system evaluates:
+
+Historical movement patterns
+
+Device-level consistency
+
+IP location versus GPS mismatch
+
+Application usage and activity patterns
+
+Claim timing and clustering behavior
+
+Correlation with real environmental conditions
+
+These signals help identify spoofing and coordinated fraud activity.
+
+UX Balance for Flagged Claims
+
+The system ensures fairness for genuine users:
+
+Low-risk claims are processed instantly
+
+Medium-risk claims undergo additional validation
+
+High-risk claims are flagged for review
+
+Fallback logic ensures that users affected by poor network or real disruptions are not unfairly penalized.
+
+Implementation Scope
+
+The current prototype includes:
+
+Core workflow implementation
+
+Location-based validation
+
+Risk assessment and premium calculation
+
+Parametric trigger simulation
+
+Basic fraud detection logic
+
+The system is designed to be extended with real-time integrations and advanced AI models.
+
+Integration Flow
 
 Weather API → Disruption Detection → Claim Trigger → Fraud Check → Payment
 
----
-
-## Future Scope
-
-* Integration with delivery platforms (Swiggy, Zomato)
-* Mobile application for workers
-* Advanced AI prediction models
-* Real-time analytics dashboard
-
----
-
-## Demo Video
+Demo Video
 
 (Add link here)
 
----
+Future Scope
 
-## Conclusion
+Integration with delivery platforms
+
+Mobile application for workers
+
+Advanced AI prediction models
+
+Real-time analytics dashboard
+
+Conclusion
 
 GigShield AI provides a structured and automated financial safety mechanism for gig workers, improving income stability during external disruptions.
