@@ -192,6 +192,8 @@ Weather API → Disruption Detection → Claim Trigger → Fraud Check → Payme
 
 https://youtu.be/b2SneHFQ22E
 
+
+
 **Future** **Scope**
 
 Integration with delivery platforms
