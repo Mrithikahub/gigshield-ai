@@ -1,5 +1,15 @@
 {
-  "buildCommand": "cd frontend/gigshield-v4 && npm install && npm run build",
-  "outputDirectory": "frontend/gigshield-v4/.next",
-  "framework": "nextjs"
+  "version": 2,
+  "builds": [
+    {
+      "src": "frontend/gigshield-v4/package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "frontend/gigshield-v4/$1"
+    }
+  ]
 }
