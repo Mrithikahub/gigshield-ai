@@ -1,4 +1,15 @@
 {
   "version": 2,
-  "rootDirectory": "frontend/gigshield-v4"
+  "builds": [
+    {
+      "src": "frontend/gigshield-v4/package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "frontend/gigshield-v4/$1"
+    }
+  ]
 }
