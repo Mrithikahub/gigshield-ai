@@ -1,5 +1,6 @@
 from fastapi  import APIRouter
 from datetime import datetime
+from fastapi import APIRouter, HTTPException
 
 from app.models.schemas          import TriggerInput
 from app.services.trigger_engine import (
@@ -164,3 +165,124 @@ def get_live_weather(city: str):
 @router.get("/thresholds")
 def thresholds():
     return get_all_thresholds()
+
+@router.post("/admin/curfew")
+def set_curfew(city: str, active: bool):
+    """Admin sets curfew - creates ₹400 claims for all workers in city"""
+    from app.utils.database import get_all_workers, create_claim, get_active_policy
+    from app.services.fraud_detector import detect_fraud
+    from app.services.payout_service import process_payout
+    
+    if not active:
+        return {"message": f"Curfew deactivated in {city}"}
+    
+    workers = [w for w in get_all_workers() if w["city"].lower() == city.lower()]
+    claims_created = []
+    
+    for worker in workers:
+        policy = get_active_policy(worker["worker_id"])
+        if not policy:
+            continue
+            
+        fraud_score, fraud_flags, status = detect_fraud(
+            worker_id=worker["worker_id"],
+            trigger_type="CURFEW",
+            amount=400.0,
+            location=city
+        )
+        
+        payout = process_payout(worker["worker_id"], "AUTO", 400.0) if status == "approved" else None
+        
+        claim = create_claim({
+            "worker_id": worker["worker_id"],
+            "policy_id": policy["policy_id"],
+            "trigger_type": "CURFEW",
+            "amount": 400.0,
+            "status": status,
+            "fraud_score": fraud_score,
+            "fraud_flags": fraud_flags,
+            "location": city,
+            "is_auto": True,
+            "payout_receipt": payout,
+        })
+        claims_created.append(claim["claim_id"])
+    
+    return {
+        "message": f"Curfew activated in {city}",
+        "claims_created": len(claims_created),
+        "claim_ids": claims_created
+    }
+
+
+@router.post("/admin/outage")
+def set_outage(platform: str, duration_hrs: int, active: bool):
+    """Admin sets platform outage - creates ₹350 claims for all workers on platform"""
+    from app.utils.database import get_all_workers, create_claim, get_active_policy
+    from app.services.fraud_detector import detect_fraud
+    from app.services.payout_service import process_payout
+    
+    if platform.lower() not in ["swiggy", "zomato"]:
+        raise HTTPException(400, "Platform must be 'swiggy' or 'zomato'")
+    
+    if not active:
+        return {"message": f"{platform} outage deactivated"}
+    
+    workers = [w for w in get_all_workers() if w["platform"].lower() == platform.lower()]
+    claims_created = []
+    
+    for worker in workers:
+        policy = get_active_policy(worker["worker_id"])
+        if not policy:
+            continue
+            
+        fraud_score, fraud_flags, status = detect_fraud(
+            worker_id=worker["worker_id"],
+            trigger_type="OUTAGE",
+            amount=350.0,
+            location=worker["city"]
+        )
+        
+        payout = process_payout(worker["worker_id"], "AUTO", 350.0) if status == "approved" else None
+        
+        claim = create_claim({
+            "worker_id": worker["worker_id"],
+            "policy_id": policy["policy_id"],
+            "trigger_type": "OUTAGE",
+            "amount": 350.0,
+            "status": status,
+            "fraud_score": fraud_score,
+            "fraud_flags": fraud_flags,
+            "location": worker["city"],
+            "is_auto": True,
+            "payout_receipt": payout,
+        })
+        claims_created.append(claim["claim_id"])
+    
+    return {
+        "message": f"{platform} outage activated for {duration_hrs} hours",
+        "claims_created": len(claims_created),
+        "claim_ids": claims_created
+    }
+
+
+@router.get("/weather/log")
+def get_weather_log(city: str, trigger_type: str, hours: int = 2):
+    """Internal endpoint for fraud module to verify weather events"""
+    from app.utils.database import get_conn
+    from datetime import datetime, timedelta
+    
+    cutoff = (datetime.utcnow() - timedelta(hours=hours)).isoformat()
+    conn = get_conn()
+    rows = conn.execute("""
+        SELECT * FROM weather_log 
+        WHERE city = ? AND trigger_type = ? AND recorded_at >= ?
+    """, (city, trigger_type, cutoff)).fetchall()
+    conn.close()
+    
+    return {
+        "city": city,
+        "trigger_type": trigger_type,
+        "time_window_hours": hours,
+        "events_found": len(rows),
+        "events": [{"value": row["value"], "recorded_at": row["recorded_at"]} for row in rows]
+    }

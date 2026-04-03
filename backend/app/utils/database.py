@@ -59,6 +59,13 @@ def init_db():
                 payout_receipt TEXT,
                 created_at     TEXT
             );
+            CREATE TABLE IF NOT EXISTS weather_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                city TEXT,
+                trigger_type TEXT,
+                value REAL,
+                recorded_at TEXT
+            );
         """)
         conn.commit()
         conn.close()
