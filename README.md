@@ -1,209 +1,187 @@
-**GigShield AI**
+# TriggerPe
 
-**AI-Powered Parametric Insurance for Gig Workers**
+## Guidewire DEVTrails 2026 — Phase 2 Submission
 
-**Problem Statement**
+TriggerPe is a parametric income insurance platform built for food delivery workers in India. The platform is designed specifically for partners working with Swiggy, Zomato, Blinkit, Zepto, Amazon, and similar platforms who lose their daily earnings when external disruptions like heavy rain, extreme heat, or poor air quality make it impossible to work.
 
-India’s gig economy relies heavily on delivery workers from platforms such as Swiggy, Zomato, Zepto, and Amazon. These workers depend on daily earnings for their livelihood.
+The core idea is simple — when a disruption happens, the worker should not have to file a claim, call anyone, or prove anything. The system detects the disruption automatically and processes the payout without any action from the worker.
 
-However, external disruptions such as heavy rainfall, extreme heat, severe pollution, and city restrictions can significantly reduce or completely stop their ability to work. During such situations, workers experience direct income loss without any financial protection.
+---
 
-Currently, there is no simple and automated system that provides compensation for such disruption-based income loss.
+## The Problem
 
-**Target Users**
+A Swiggy delivery partner in Chennai earns around ₹600 to ₹1000 on a normal working day. When it rains heavily or when AQI shoots above 300, they simply cannot go out. Orders dry up. Earnings drop to zero. There is no backup, no safety net, and no insurance that covers this kind of income loss.
 
-Food delivery partners (Swiggy, Zomato, Zepto)
+This is not a rare situation. Chennai, Mumbai, Delhi, and Bangalore see multiple such disruption days every month during monsoon season. Across India, millions of delivery workers face this problem every year with zero protection.
 
-Logistics and e-commerce delivery workers
+Existing insurance products do not cover income loss from weather. They cover health, accidents, and vehicle damage — none of which address the actual problem these workers face.
 
-Urban gig workers dependent on daily earnings
+---
 
-**Example persona:**
-A delivery partner earning ₹500–₹1000 per day loses income completely during heavy rain or pollution spikes, with no backup or insurance support.
+## What We Built
 
-**Solution**
+TriggerPe monitors real-time environmental conditions for each worker's city and automatically triggers insurance payouts when predefined thresholds are breached.
 
-GigShield AI is an AI-powered parametric insurance platform designed to protect gig workers from income loss.
+The worker registers once, chooses a weekly plan, and is protected from that point forward. No paperwork. No claim forms. No waiting.
 
-The system continuously monitors environmental conditions such as weather and pollution. When a predefined disruption is detected, it automatically triggers an insurance claim and processes compensation without requiring manual claim filing.
+When rain crosses 15mm per hour in Chennai, every active worker in Chennai gets a payout automatically. When AQI crosses 300, the same happens. The whole process — from trigger detection to payout initiation — happens without any human involvement.
 
-The platform also includes a dynamic premium calculation system that adjusts weekly pricing based on environmental risk factors.
+---
 
-**Workflow**
+## Persona
 
-Worker registers on the platform (with location detection)
+We focused on food delivery workers for Swiggy and Zomato operating in Chennai as our primary persona. This group was chosen because Chennai has high monsoon rainfall, one of the largest gig worker populations in South India, and workers here are particularly vulnerable to income loss during the June to November monsoon period.
 
-System performs AI-based risk assessment
+A typical worker in our target segment:
+- Works 8 to 10 hours a day, 6 days a week
+- Earns between ₹500 and ₹1200 on a good day
+- Has no formal employment contract or employee benefits
+- Cannot afford to miss more than 2 working days in a week without financial stress
+- Does not have the time, literacy, or trust to navigate complex insurance products
 
-Weekly insurance premium is calculated
+---
 
-Worker purchases the policy
+## Weekly Premium Model
 
-System continuously monitors environmental data
+We structured pricing on a weekly basis because delivery workers get paid weekly or daily by their platforms. Asking them to pay monthly or annually creates a mismatch with their cash flow.
 
-Disruption is detected (rain, heat, pollution)
+Three tiers are available:
 
-Claim is triggered automatically
+**Basic — ₹49 per week**
+Covers rain and heat triggers. Maximum payout ₹800 per qualifying event.
 
-Fraud detection validates the claim
+**Standard — ₹79 per week**
+Covers all five triggers including AQI, curfew, and platform outage. Maximum payout ₹1400 per event. This is our most popular tier.
 
-Payout is processed
+**Premium — ₹99 per week**
+All triggers covered with priority payout processing. Maximum payout ₹2000 per event.
 
-**Workflow** **Diagram**
+The premium is calculated dynamically using our ML risk model which factors in the worker's city, zone, delivery platform, historical weather patterns for that area, and the worker's tenure on the platform. A worker operating in a flood-prone zone pays slightly more than one in a historically safe zone.
 
-Worker Registration → Risk Assessment → Premium Calculation → Policy Purchase → Environmental Monitoring → Trigger Detection → Claim Generation → Fraud Check → Payout Processing
+---
 
-<img width="481" height="928" alt="image" src="https://github.com/user-attachments/assets/cd0b2748-598e-47e5-b12a-ffe247972535" />
+## Parametric Triggers
 
+We defined five trigger conditions for Phase 2. Each one is tied to an objective, verifiable data source. When the threshold is breached, the system fires automatically.
 
-**Weekly** **Premium** **Model**
+**Heavy Rain** — Rainfall exceeds 15mm per hour. Payout: ₹800. Source: OpenWeatherMap API.
 
-The platform uses a weekly subscription model aligned with gig workers’ earning cycles.
+**Extreme Heat** — Temperature exceeds 42 degrees Celsius. Payout: ₹600. Source: OpenWeatherMap API.
 
-Premium is calculated based on:
+**Hazardous AQI** — Air Quality Index exceeds 300. Payout: ₹600. Source: Air quality API.
 
-Environmental conditions
+**Curfew or Strike** — Admin sets a curfew flag for a city, indicating unplanned civic disruption. Payout: ₹800. Source: Admin input via our platform.
 
-Risk level
+**Platform Outage** — Swiggy or Zomato app experiences downtime exceeding 2 hours. Payout: ₹350. Source: Admin input via our platform.
 
-Location factors
+These thresholds were chosen based on publicly available data on weather conditions that make outdoor delivery work dangerous or impossible in Indian cities.
 
-This ensures affordability while maintaining risk-based pricing.
+---
 
-**Parametric** **Triggers**
+## What We Built in Phase 2
 
-The system uses predefined thresholds to trigger claims automatically:
+Phase 2 focused on making the core protection and claims flow work end to end.
 
-Rainfall above threshold
+**Registration and Onboarding**
 
-Temperature above extreme levels
+Workers can register in under 2 minutes. The system automatically detects their city using GPS. They select their platform, set their average daily earning, choose a plan, and their policy is live immediately. We added a mandatory exclusions screen during registration so workers clearly understand what is not covered before they pay.
 
-AQI crossing hazardous limits
+What is explicitly excluded from coverage: vehicle repairs, health and accident costs, war, government declared pandemic, terrorism, platform account suspension, and pre-existing disputes with delivery platforms.
 
-When a trigger condition is met, claims are processed instantly without manual verification.
+**Dynamic Premium Calculation**
 
-**AI** **Integration**
-**Risk** **Prediction**
+Premiums are calculated by our ML model using a Random Forest classifier trained on synthetic worker data. The model considers zone flood risk score, average daily orders in the zone, peak hour delivery density, the worker's platform, and their tenure. The output is a risk score that adjusts the base premium up or down within the tier range.
 
-AI models analyze environmental factors such as rainfall, air quality, and temperature to estimate disruption risk.
+**Automatic Claims Pipeline**
 
-**Dynamic** **Pricing**
+When a trigger fires, the system creates a claim record, runs it through fraud detection, and if it passes, marks it as approved and queued for payout. The entire pipeline runs without any manual action from the worker or an agent.
 
-Premiums are adjusted dynamically based on calculated risk levels and environmental conditions.
+**Fraud Detection**
 
-**Fraud** **Detection**
+We built four fraud checks. First, we verify that the worker's last known location matches the city where the claim was triggered. Second, we check for duplicate claims — if the same worker already has a claim for the same trigger type within 12 hours, the new one is rejected. Third, we use an IsolationForest model to flag workers whose claim frequency is significantly higher than the zone average. Fourth, we cross-reference every claim against our weather log to confirm that the trigger event actually occurred in that city within a two-hour window of the claim.
 
-The system identifies suspicious claims using anomaly detection techniques such as duplicate claims, inconsistent data, and unusual activity patterns.
+Claims that score below 0.4 on our fraud score are auto-approved. Claims between 0.4 and 0.7 are flagged for manual review. Claims above 0.7 are auto-rejected.
 
-**Tech** **Stack**
+**Payout Simulation**
 
-Layer	Technology
-Frontend	React / Next.js
-Backend	Python (FastAPI)
-AI/ML	Scikit-learn
-Database	SQLite / MongoDB
-APIs	Weather and Air Quality APIs
-Payments	Razorpay / Simulation
-System Architecture
+We integrated Razorpay in test mode to simulate payouts. When a claim is approved, the system initiates a payout to the worker's registered bank account and sends a notification. For the demo, we use test bank credentials.
 
-Frontend (React/Next.js)
-↓
-Backend API (FastAPI)
-↓
-Risk Engine | Premium Calculator | Trigger Engine | Fraud Detection Module
-↓
-Database (SQLite/MongoDB)
-↓
-External APIs (Weather + AQI)
-↓
-Payment System
+**Admin Dashboard**
 
-The system follows a modular architecture where each component operates independently, enabling scalability and maintainability.
+The admin panel shows total active policies, premiums collected, claims triggered, total payouts disbursed, and the current loss ratio. Admins can simulate a trigger for any city to demonstrate the auto-claim pipeline in action. They can also manually review flagged claims and approve or reject them.
 
-<img width="1600" height="854" alt="image" src="https://github.com/user-attachments/assets/701d6e93-35af-4cb3-8210-42a0b48affb7" />
+---
 
+## Actuarial Basis
 
-**Market** **Crash** **Handling**
+We estimated our break-even premium based on Chennai weather data. Chennai sees approximately 8 to 10 heavy rain events per month during monsoon season, which translates to roughly 2 to 3 qualifying trigger events per month per worker on average.
 
-In scenarios where a large number of claims are triggered simultaneously due to widespread disruptions:
+At an average payout of ₹300 per event and 2.5 events per month, expected monthly payout per worker is ₹750, or roughly ₹187.50 per week.
 
-Risk-based pricing helps balance payouts
+Our Standard plan at ₹79 per week does not cover this fully on its own. The model relies on geographic diversification — not all cities trigger simultaneously — and on the fact that most workers are in lower-risk zones. We hold 20 percent of collected premiums as a reserve fund.
 
-Predefined payout structures limit over-exposure
+This is a simplified actuarial model appropriate for a hackathon prototype. A production system would require licensed actuarial analysis and regulatory approval.
 
-Geographic diversification reduces concentrated risk
+---
 
-AI continuously adjusts pricing based on real-time risk
+## Tech Stack
 
-This ensures the system remains financially sustainable even during high-volume claim events.
+The frontend is built with Next.js 14 and TypeScript. The backend runs on FastAPI with Python 3.11. Our ML models use scikit-learn. The database is SQLite for this prototype. We use the OpenWeatherMap free tier for weather data. Payments are simulated via Razorpay test mode.
 
-**Adversarial** **Defense** **&** **Anti-Spoofing** **Strategy**
-**Differentiation**
+---
 
-The system differentiates between genuine users and spoofing actors using multi-layer validation rather than relying solely on GPS.
+## How to Run Locally
 
-Legitimate users show consistent movement patterns, behavioral signals, and alignment with real disruption conditions. Spoofed users exhibit anomalies such as unrealistic location changes, static behavior, or lack of activity correlation.
+Clone the repository:
+```
+git clone https://github.com/Mrithikahub/gigshield-ai
+```
 
-AI models analyze these patterns to assign a fraud score to each claim.
+Start the backend:
+```
+cd backend
+py -3.11 -m pip install fastapi uvicorn pandas numpy scikit-learn sqlalchemy python-multipart httpx python-dotenv requests
+py -3.11 -m uvicorn app.main:app --reload --port 8000
+```
 
-**Data** **Signals** **Used** **Beyond** **GPS**
+Start the frontend:
+```
+cd frontend/gigshield-v4
+npm install
+npm run dev
+```
 
-Historical movement patterns
+## API Endpoints
 
-Device-level consistency
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /workers/register | Register a new delivery worker |
+| GET | /workers/{worker_id} | Get worker profile |
+| GET | /workers/ | List all workers |
+| POST | /policies/create | Create insurance policy |
+| GET | /policies/{worker_id} | Get worker policies |
+| GET | /premium/{worker_id} | Get dynamic premium |
+| POST | /trigger | Fire a manual trigger |
+| POST | /trigger/auto/{city} | Auto trigger for a city |
+| GET | /trigger/weather/{city} | Get live weather |
+| GET | /claims/all | Get all claims |
+| GET | /claims/{worker_id} | Get worker claims |
+| PATCH | /claims/{claim_id}/approve | Approve a claim |
+| PATCH | /claims/{claim_id}/reject | Reject a claim |
+| GET | /analytics | Platform analytics |
 
-IP location versus GPS mismatch
+---
 
-Application usage and activity patterns
+## Live Demo
 
-Claim timing and clustering behavior
+Try it out: https://triggerpe-f6ss.vercel.app/
 
-Correlation with real environmental conditions
+Demo Video: https://youtu.be/Dtrrc_ADifk
 
-These signals help identify spoofing and coordinated fraud activity.
+---
 
-**UX** **Balance** **for** **Flagged** **Claims**
+## Team
 
-Low-risk claims are processed instantly
+Built for Guidewire DEVTrails 2026 University Hackathon.
 
-Medium-risk claims undergo additional validation
-
-High-risk claims are flagged for review
-
-Fallback logic ensures that users affected by poor network or real disruptions are not unfairly penalized.
-
-**Implementation** **Scope**
-
-Core workflow implementation
-
-Location-based validation
-
-Risk assessment and premium calculation
-
-Parametric trigger simulation
-
-Basic fraud detection logic
-
-**Integration** **Flow**
-
-Weather API → Disruption Detection → Claim Trigger → Fraud Check → Payment
-
-**Demo** **Video**
-
-https://youtu.be/b2SneHFQ22E
-
-
-
-**Future** **Scope**
-
-Integration with delivery platforms
-
-Mobile application for workers
-
-Advanced AI prediction models
-
-Real-time analytics dashboard
-
-**Conclusion**
-
-GigShield AI provides a structured and automated financial safety mechanism for gig workers, improving income stability during external disruptions.
+Five member team — frontend, backend, ML/AI integration, fraud detection, and insurance domain research.
