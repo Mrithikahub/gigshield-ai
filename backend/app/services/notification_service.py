@@ -42,7 +42,7 @@ def notify_claim_filed(phone: str, worker_name: str, trigger_type: str, amount: 
     }
     label = trigger_labels.get(trigger_type, trigger_type)
     msg = (
-        f"GigShield AI: Hi {worker_name}, a claim of Rs.{amount:.0f} "
+        f"TriggerPe: Hi {worker_name}, a claim of Rs.{amount:.0f} "
         f"has been auto-filed for {label} disruption. "
         f"Payout will be processed within 24 hours. Stay safe!"
     )
@@ -51,16 +51,16 @@ def notify_claim_filed(phone: str, worker_name: str, trigger_type: str, amount: 
 
 def notify_claim_approved(phone: str, worker_name: str, amount: float, receipt: str):
     msg = (
-        f"GigShield AI: Hi {worker_name}, your claim of Rs.{amount:.0f} "
+        f"TriggerPe: Hi {worker_name}, your claim of Rs.{amount:.0f} "
         f"has been APPROVED and paid. Receipt: {receipt}. "
-        f"Your income is protected. Thank you for trusting GigShield!"
+        f"Your income is protected. Thank you for trusting TriggerPe!"
     )
     send_sms(phone, msg)
 
 
 def notify_policy_expiring(phone: str, worker_name: str, days_left: int):
     msg = (
-        f"GigShield AI: Hi {worker_name}, your policy expires in {days_left} day(s). "
+        f"TriggerPe: Hi {worker_name}, your policy expires in {days_left} day(s). "
         f"Renew now to stay protected. Visit your dashboard to renew."
     )
     send_sms(phone, msg)

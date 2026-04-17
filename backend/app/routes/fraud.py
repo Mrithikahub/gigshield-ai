@@ -1,5 +1,5 @@
 """
-GigShield AI — Fraud Audit Routes (Phase 3)
+TriggerPe - Fraud Audit Routes (Phase 3)
 Provides a structured audit trail for any filed claim.
 
 GET  /fraud/report/{claim_id}   → full GPS + weather + behavioral audit

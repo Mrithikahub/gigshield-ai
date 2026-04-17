@@ -1,5 +1,5 @@
 """
-GigShield AI - Fraud Detector (Phase 3 Upgrade)
+TriggerPe - Fraud Detector (Phase 3 Upgrade)
 Adds: GPS spoof detection, historical weather validation, behavioral IsolationForest (v2)
 Preserves: all existing rule-based checks and RandomForest (v1) model intact.
 """

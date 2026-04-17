@@ -1,5 +1,5 @@
 """
-GigShield AI — Fraud Model Retraining Script (Phase 2)
+TriggerPe — Fraud Model Retraining Script (Phase 2)
 Run this from the backend folder:
     python retrain_fraud_model.py
 """

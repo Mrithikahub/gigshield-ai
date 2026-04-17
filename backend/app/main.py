@@ -46,7 +46,7 @@ except ImportError:
 
 # ── App ───────────────────────────────────────────────────────────────────────
 app = FastAPI(
-    title="GigShield AI",
+    title="TriggerPe",
     version="2.0.0",
     description="AI-Powered Parametric Insurance for India's Gig Economy",
     lifespan=lifespan,
@@ -84,7 +84,7 @@ app.include_router(fraud_router,     prefix="/fraud",     tags=["Fraud"])
 @app.get("/")
 def root():
     return {
-        "service":     "GigShield AI",
+        "service":     "TriggerPe",
         "version":     "2.0.0",
         "status":      "running",
         "environment": ENVIRONMENT,

@@ -1,4 +1,4 @@
-# GigShield AI — Fraud Model Report
+# TriggerPe — Fraud Model Report
 
 Generated: 2026-04-16 | Environment: Python 3.10, scikit-learn 1.7.2, numpy 1.24.3
 

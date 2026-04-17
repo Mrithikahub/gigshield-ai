@@ -1,0 +1,1 @@
+Put delivery-man.png and delivery-scooter.png in this folder.
